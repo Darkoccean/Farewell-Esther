@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Farewell, Esther 💖</title>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+<style>
+:root {
+  --bg-dark: #0a0005;
+  --bg-gradient1: #150011;
+  --bg-gradient2: #1a0015;
+  --pink: #ff2e8e;
+  --pink-dark: #d91e6f;
+  --pink-glow: #ff69b4;
+  --text-main: #ffffff;
+}
+
+body {
+  min-height: 100svh;
+  margin: 0;
+  font-family: "Times New Roman", serif;
+  color: var(--text-main);
+  background: linear-gradient(135deg, var(--bg-dark), var(--bg-gradient1), var(--bg-gradient2));
+  background-size: 300% 300%;
+  animation: slowGradient 18s ease infinite;
+  overflow-y: auto;
+  padding: 2rem;
+  position: relative;
+}
+
+@keyframes slowGradient {
+  0% {background-position:0% 50%} 
+  50% {background-position:100% 50%} 
+  100% {background-position:0% 50%}
+}
+
+.note {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2.5rem 3rem;
+  background: rgba(20,0,15,0.65);
+  border-radius: 24px;
+  border: 1px solid rgba(255,46,142,0.18);
+  box-shadow: 0 20px 80px rgba(0,0,0,0.6), 0 0 40px rgba(255,46,142,0.15);
+  line-height: 1.8;
+  font-size: 1.6rem;
+  white-space: pre-line;
+}
+
+.glow {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #ff69b4;
+  text-shadow:
+    0 0 5px #ff2e8e,
+    0 0 10px #ff2e8e,
+    0 0 20px #ff69b4,
+    0 0 40px #ff1493;
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+#playMusicBtn {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.6rem 1.5rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 2rem;
+  background: var(--pink);
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(255,46,142,0.35);
+  z-index: 100;
+  transition: all 0.3s ease;
+}
+
+#playMusicBtn:hover {
+  background: var(--pink-dark);
+  transform: translateY(-1px);
+}
+
+#birthdayNote {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  font-size: 0.95rem;
+  opacity: 0.8;
+  color: var(--pink-glow);
+  font-style: italic;
+}
+
+#musicWrapper {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  left: -9999px; /* offscreen to allow full play */
+}
+
+#confettiCanvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+}
+</style>
+</head>
+<body>
+
+<canvas id="confettiCanvas"></canvas>
+
+<div class="note">
+<span class="glow">Dear Esther,</span>
+
+I have lived inside a body that often betrays me,
+carrying fragments of myself like shards of glass,
+hidden beneath the mask I wore for the world.
+
+You think those were the layers I had,
+but darling, those are stripes of scars left over the years.
+
+Each wound traces a story across the bruises on my soul ; 
+every tear flows along the cracks of my innocence.
+
+But I wasn’t hiding those from you;
+I was negotiating with them,
+convincing each fractured piece to let you in,
+to allow a dream of us to exist inside my chaos.
+
+To my eyes, you’re perfect.
+And on days the world makes you feel less of that,
+know that among 8.27 billion people,
+there is one person who, when she thinks of you,
+sees the heavens in awe of you.
+And that is enough for me, if it is enough for you.
+
+Farewell, my Darling.
+
+Sincerely,
+Josephine
+</div>
+
+<div id="birthdayNote">This will be updated every year on your birthday 🎂💌</div>
+
+<button id="playMusicBtn">▶ Play Music ♡ </button>
+
+<div id="musicWrapper">
+  <!-- Nicki Minaj "Come See About Me" -->
+  <iframe width="100%" height="300" scrolling="no" frameborder="no" allow="autoplay"
+  src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A483613251&color=%23782e12&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"></iframe>
+</div>
+
+<script>
+// Confetti falling slowly
+const confettiCanvas = document.getElementById("confettiCanvas");
+
+function resizeCanvas() {
+  const dpr = Math.max(1, window.devicePixelRatio || 1);
+  confettiCanvas.width = window.innerWidth * dpr;
+  confettiCanvas.height = window.innerHeight * dpr;
+  confettiCanvas.style.width = "100vw";
+  confettiCanvas.style.height = "100vh";
+}
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
+
+const confettiInstance = confetti.create(confettiCanvas, { resize: true });
+
+setInterval(() => {
+  confettiInstance({
+    particleCount: 2,
+    startVelocity: 10,
+    spread: 60,
+    ticks: 300,
+    gravity: 0.3,
+    colors: ['#ff2e8e','#ff69b4','#ff1493','#ffffff'],
+    origin: { x: Math.random(), y: 0 }
+  });
+}, 120);
+
+// MUSIC CONTROL (full play like friend's code)
+const playBtn = document.getElementById("playMusicBtn");
+const iframe = document.querySelector('#musicWrapper iframe');
+let isPlaying = false;
+
+iframe.addEventListener('load', () => {
+  playBtn.addEventListener("click", () => {
+    if (!isPlaying) {
+      iframe.contentWindow.postMessage(JSON.stringify({ method: 'play' }), '*');
+      playBtn.textContent = "⏸ Pause Music ♡";
+      isPlaying = true;
+    } else {
+      iframe.contentWindow.postMessage(JSON.stringify({ method: 'pause' }), '*');
+      playBtn.textContent = "▶ Play Music ♡";
+      isPlaying = false;
+    }
+  });
+});
+</script>
+
+</body>
+</html>
